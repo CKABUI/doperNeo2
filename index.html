@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DorperPro 2.0 | Kenya Dorper Farm Management Platform</title>
+<link rel="stylesheet" href="css/style.css">
+<script>
+(function(){
+  var saved=localStorage.getItem("dorperpro_theme");
+  var theme=saved||(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+  if(theme==="dark")document.documentElement.setAttribute("data-theme","dark");
+})();
+</script>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">🐑</span><div><strong>DorperPro</strong><small>Kenya Farm Management</small></div></div>
+  <div class="topbar-actions">
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+      <span class="icon" id="themeIcon">☀️</span><small id="themeLabel">Light</small>
+      <span class="switch"></span>
+    </button>
+    <button id="menuBtn" class="menu-btn">☰</button>
+  </div>
+</header>
+<div class="app-shell">
+<aside id="sidebar">
+  <nav>
+    <button class="nav-link active" data-section="dashboard">🏠 Dashboard</button>
+    <button class="nav-link" data-section="animals">🐑 Sheep Registry</button>
+    <button class="nav-link" data-section="growth">📈 Growth Analytics</button>
+    <button class="nav-link" data-section="feeding">🌿 Feeding & Nutrition</button>
+    <button class="nav-link" data-section="health">💉 Health & Vaccinations</button>
+    <button class="nav-link" data-section="breeding">❤️ Reproduction & Lambing</button>
+    <button class="nav-link" data-section="genetics">🧬 Kenya Genetics Repository</button>
+    <button class="nav-link" data-section="breeds">🇿🇦 Breeds & Heritage</button>
+    <button class="nav-link" data-section="meat">🥩 Meat & Aging</button>
+    <button class="nav-link" data-section="finance">💰 Farm Finance</button>
+    <button class="nav-link" data-section="market">🛒 Market & Sales</button>
+    <button class="nav-link" data-section="knowledge">🎓 Knowledge Hub</button>
+    <button class="nav-link" data-section="community">💬 Farmer Community</button>
+  </nav>
+</aside>
+<main>
+<section id="dashboard" class="page-section active">
+  <div class="page-heading"><div><p class="eyebrow">DORPERPRO 2.0</p><h1>Smart Dorper Farm Management</h1><p>Track your flock from birth to market while building better breeding and production decisions.</p></div><div class="heading-actions"><button class="secondary-btn" data-section-target="genetics">🧬 Genetics Assistant</button><button class="primary-btn" data-open-modal="animalModal">+ Add Sheep</button></div></div>
+  <div class="alert-grid"><div id="smartAlerts" class="smart-alert"></div><div id="marketSummary" class="market-summary"></div></div>
+  <div class="stat-grid">
+    <div class="stat-card"><span>🐑</span><strong id="totalAnimals">0</strong><small>Total Sheep</small></div>
+    <div class="stat-card"><span>♀️</span><strong id="totalEwes">0</strong><small>Ewes</small></div>
+    <div class="stat-card"><span>♂️</span><strong id="totalRams">0</strong><small>Rams</small></div>
+    <div class="stat-card"><span>🥩</span><strong id="readyMarket">0</strong><small>Ready for Market</small></div>
+  </div>
+  <div class="two-column">
+    <div class="panel"><h3>Flock Snapshot</h3><div id="dashboardAnimals"></div></div>
+    <div class="panel"><h3>Quick Actions</h3><div class="quick-grid"><button data-section-target="animals">Register Animal</button><button data-section-target="feeding">Log Feeding</button><button data-section-target="health">Log Health</button><button data-section-target="market">Record Sale</button></div></div>
+  </div>
+</section>
+
+<section id="animals" class="page-section">
+<div class="page-heading"><div><p class="eyebrow">FLOCK MANAGEMENT</p><h2>Sheep Registry</h2><p>Maintain digital records for every animal.</p></div><button class="primary-btn" data-open-modal="animalModal">+ Add Sheep</button></div>
+<div class="toolbar"><input id="animalSearch" placeholder="Search tag, name or breed..."><select id="animalFilter"><option value="">All animals</option><option>Ram</option><option>Ewe</option><option>Lamb</option></select></div>
+<div class="panel table-wrap"><table><thead><tr><th>Tag</th><th>Name</th><th>Sex</th><th>Breed</th><th>DOB</th><th>Weight</th><th>Status</th><th>Actions</th></tr></thead><tbody id="animalsTableBody"></tbody></table></div>
+</section>
+
+<section id="growth" class="page-section">
+<div class="page-heading"><div><p class="eyebrow">PERFORMANCE ANALYTICS</p><h2>Growth & Weight Analytics</h2><p>Monitor growth, average daily gain and market readiness.</p></div></div>
+<div class="two-column"><div class="panel"><h3>Growth Calculator</h3><form id="growthForm" class="form-grid">
+<label>Sheep<select id="growthAnimal"></select></label><label>Previous Weight (kg)<input id="previousWeight" type="number" min="0" step=".1" required></label><label>Previous Date<input id="previousDate" type="date" required></label><label>Current Weight (kg)<input id="currentWeight" type="number" min="0" step=".1" required></label><label>Current Date<input id="currentDate" type="date" required></label><button class="primary-btn full">Calculate Growth</button></form><div id="growthResult" class="result-card"></div></div><div class="panel"><h3>Flock Performance</h3><div id="growthSummary" class="analytics-cards"></div></div></div>
+<div class="panel"><h3>Weight & Market Readiness</h3><div class="table-wrap"><table><thead><tr><th>Sheep</th><th>Weight</th><th>Target</th><th>Progress</th><th>Status</th></tr></thead><tbody id="growthTableBody"></tbody></table></div></div>
+</section>
+
+<section id="feeding" class="page-section">
+<div class="page-heading"><div><p class="eyebrow">NUTRITION</p><h2>Feeding & Nutrition</h2><p>Record feeding patterns and understand nutritional needs.</p></div></div>
+<div class="two-column"><div class="panel"><h3>Log Feeding</h3><form id="feedingForm" class="form-grid"><label>Sheep<select id="feedingAnimal"></select></label><label>Feed Type<input id="feedType" required placeholder="Hay, pasture, pellets..."></label><label>Quantity<input id="feedQty" placeholder="e.g. 2 kg"></label><label>Date<input id="feedingDate" type="date" required></label><label class="full">Notes<textarea id="feedingNotes"></textarea></label><button class="primary-btn full">Save Feeding Record</button></form></div><div class="panel"><h3>Nutrition Guide</h3><div class="accordion"><button class="accordion-btn">Growing Lambs <span>+</span></button><div class="accordion-panel">Provide adequate energy, protein, minerals and clean water to support steady growth without excessive fat deposition.</div><button class="accordion-btn">Breeding Stock <span>+</span></button><div class="accordion-panel">Monitor body condition and adjust nutrition before breeding, during pregnancy and after lambing.</div><button class="accordion-btn">Water & Minerals <span>+</span></button><div class="accordion-panel">Clean water should always be available. Mineral supplementation should reflect local forage and professional advice.</div></div></div></div>
+<div class="panel"><h3>Feeding History</h3><div class="table-wrap"><table><thead><tr><th>Date</th><th>Sheep</th><th>Feed</th><th>Quantity</th><th>Notes</th></tr></thead><tbody id="feedingTableBody"></tbody></table></div></div>
+</section>
+
+<section id="health" class="page-section">
+<div class="page-heading"><div><p class="eyebrow">HEALTH MANAGEMENT</p><h2>Health & Vaccinations</h2><p>Track vaccinations, deworming, medication and veterinary actions.</p></div></div>
+<div class="two-column"><div class="panel"><h3>Log Health Action</h3><form id="healthForm" class="form-grid"><label>Sheep<select id="healthAnimal"></select></label><label>Action Type<select id="healthType"><option>Vaccination</option><option>Deworming</option><option>Medication</option><option>Vet Visit</option><option>Illness</option></select></label><label>Action / Product<input id="healthAction" required></label><label>Date<input id="healthDate" type="date" required></label><label>Next Due<input id="nextDue" type="date"></label><label class="full">Notes<textarea id="healthNotes"></textarea></label><button class="primary-btn full">Save Health Record</button></form></div><div class="panel"><h3>Health Status</h3><div id="healthSummary" class="analytics-cards"></div></div></div>
+<div class="panel"><h3>Health History</h3><div class="table-wrap"><table><thead><tr><th>Date</th><th>Sheep</th><th>Type</th><th>Action</th><th>Next Due</th></tr></thead><tbody id="healthTableBody"></tbody></table></div></div>
+</section>
+
+<section id="breeding" class="page-section">
+<div class="page-heading"><div><p class="eyebrow">REPRODUCTION</p><h2>Reproduction & Lambing</h2><p>Track mating, pregnancy, parentage and lambing performance.</p></div></div>
+<div class="feature-grid"><article class="feature-card"><span>🧬</span><h3>Parentage</h3><p>Record sire and dam for stronger pedigree management.</p></article><article class="feature-card"><span>❤️</span><h3>Breeding Records</h3><p>Use fertility, mothering and offspring performance records.</p></article><article class="feature-card"><span>🐑</span><h3>Lambing</h3><p>Plan around expected lambing dates and record litter outcomes.</p></article></div>
+<div class="two-column"><div class="panel"><h3>Lambing Date Calculator</h3><form id="lambingForm" class="form-grid"><label>Mating Date<input id="matingDate" type="date" required></label><label>Ewe<select id="lambingEwe"></select></label><button class="primary-btn full">Calculate Expected Lambing</button></form><div id="lambingResult" class="result-card"></div></div><div class="panel"><h3>Breeding Checklist</h3><ul class="check-list"><li>Verify pedigree and parentage.</li><li>Assess body condition and structure.</li><li>Review fertility and mothering history.</li><li>Avoid close-relative mating where records permit.</li></ul></div></div>
+</section>
+
+<section id="genetics" class="page-section">
+<div class="page-heading"><div><p class="eyebrow">KENYA-FOCUSED DECISION SUPPORT</p><h2>Kenya Dorper Genetics Repository</h2><p>Use documented performance, pedigree and breeding objectives to guide selection. These are decision-support strategies, not guaranteed genetic outcomes.</p></div></div>
+<div class="genetics-banner"><span>🇰🇪</span><div><h3>Built for Kenyan Dorper Farmers</h3><p>Prioritise adaptation, growth, fertility, mothering ability, resilience and market performance according to your environment.</p></div></div>
+<div class="two-column"><div class="panel"><h3>Breeding Objective Wizard</h3><form id="geneticsForm" class="form-grid"><label>Production Objective<select id="geneticObjective"><option value="meat">Commercial Meat</option><option value="growth">Fast Growth</option><option value="resilience">Dryland Resilience</option><option value="maternal">Maternal & Lamb Survival</option><option value="balanced">Balanced Commercial Flock</option></select></label><label>Environment<select id="geneticEnvironment"><option value="arid">Arid / ASAL</option><option value="semi">Semi-Arid</option><option value="medium">Medium Potential</option><option value="high">Higher Rainfall</option></select></label><button class="primary-btn full">Generate Trait Priorities</button></form><div id="geneticsResult" class="result-card"></div></div>
+<div class="panel"><h3>Ram × Ewe Compatibility Assistant</h3><form id="compatibilityForm" class="form-grid"><label>Ram<select id="compatRam"></select></label><label>Ewe<select id="compatEwe"></select></label><button class="primary-btn full">Assess Pairing</button></form><div id="compatibilityResult" class="result-card"></div></div></div>
+<div class="panel"><div class="panel-heading"><h3>Genetic Strategy Repository</h3><span class="badge">Kenya Focus</span></div><div class="strategy-grid">
+<article class="strategy-card"><span>🥩</span><h3>Commercial Meat</h3><p><strong>High-growth ram × productive fertile ewe</strong></p><small>Prioritise growth, weaning weight, muscling, soundness and fertility.</small></article>
+<article class="strategy-card"><span>🌵</span><h3>Dryland Resilience</h3><p><strong>Adapted ram × adapted productive ewe</strong></p><small>Prioritise survival, body condition, resilience and efficient resource use.</small></article>
+<article class="strategy-card"><span>🛡️</span><h3>Growth + Resilience</h3><p><strong>Strong growth line × documented resilient line</strong></p><small>Track health, parasite management and growth together.</small></article>
+<article class="strategy-card"><span>❤️</span><h3>Maternal Performance</h3><p><strong>Fertile ram × proven mothering ewe</strong></p><small>Prioritise fertility, lamb survival and weaning performance.</small></article>
+<article class="strategy-card"><span>⚖️</span><h3>Balanced Flock</h3><p><strong>Balanced multi-trait selection</strong></p><small>Combine growth, fertility, adaptability, mothering and structure.</small></article>
+<article class="strategy-card"><span>🚫</span><h3>Do Not Mate Warning</h3><p><strong>Review close parentage before mating</strong></p><small>Verify pedigree before relying on any automated compatibility score.</small></article>
+</div></div>
+<div class="panel"><h3>Trait Priority Framework</h3><div class="trait-grid"><div><strong>Growth</strong><span>Birth, weaning and yearling performance</span></div><div><strong>Fertility</strong><span>Conception and reproductive history</span></div><div><strong>Mothering</strong><span>Lamb survival and weaning success</span></div><div><strong>Resilience</strong><span>Health and local adaptation</span></div><div><strong>Structure</strong><span>Legs, feet, capacity and soundness</span></div><div><strong>Meat</strong><span>Muscling and market suitability</span></div></div></div>
+<div class="panel source-panel"><h3>Repository Disclaimer</h3><p>This repository is a structured knowledge and decision-support layer. It does not claim that one genetic combination is universally best for Kenya. Actual breeding decisions should use verified pedigree, performance records, breed standards, local adaptation and professional breeding advice.</p></div>
+</section>
+
+<section id="breeds" class="page-section">
+<div class="page-heading"><div><p class="eyebrow">SOUTH AFRICAN HERITAGE</p><h2>Dorper Breeds & Heritage Gallery</h2><p>Explore the Dorper's South African roots, its distinguishing traits, and how the breed's background connects to Kenyan production goals.</p></div></div>
+
+<div class="hero-gallery"><div class="gallery-hero"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Jr._Show_Champion_Dorper_Ewe_(44505797164).jpg" alt="Dorper ewe with the breed's characteristic black head"><div class="gallery-caption"><span>🇿🇦 South African Dorper Heritage</span><h3>From Karoo breed standards to Kenyan farm performance</h3><p>Photo: Wikimedia Commons, CC BY 2.0. Free to reuse with attribution.</p></div></div></div>
+
+<div class="mini-gallery">
+  <figure><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Jr._Show_Ch._Dorper_Ram_(23727243938).jpg" alt="Dorper ram, black head, white body"><figcaption>Dorper ram</figcaption></figure>
+  <figure><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Dorper_white_ram.jpg" alt="White Dorper ram, fully white coat"><figcaption>White Dorper ram</figcaption></figure>
+  <figure><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ovce_a_jehne_dorper.jpg" alt="Dorper ewe with lamb at side"><figcaption>Ewe & lamb</figcaption></figure>
+  <figure><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Reserve_Champion_Dorper_Ewe_(44234010785).jpg" alt="Reserve champion Dorper ewe at a show"><figcaption>Show-quality ewe</figcaption></figure>
+</div>
+
+<div class="breed-grid"><article class="breed-card"><img class="breed-image" src="https://commons.wikimedia.org/wiki/Special:FilePath/Jr._Show_Ch._Dorper_Ram_(23727243938).jpg" alt="Dorper sheep, black head"><h3>Dorper</h3><p>A South African meat sheep with a black head and white body, developed for efficient meat production and adaptability to harsh conditions.</p><span class="badge">Meat Breed</span></article><article class="breed-card"><img class="breed-image" src="https://commons.wikimedia.org/wiki/Special:FilePath/Dorper_white_ram.jpg" alt="White Dorper sheep, fully white"><h3>White Dorper</h3><p>A predominantly white variant of the Dorper, selected for the same efficient meat production and adaptability, favoured where a white coat is preferred.</p><span class="badge">Meat Breed</span></article><article class="breed-card"><img class="breed-image" src="https://commons.wikimedia.org/wiki/Special:FilePath/Domba_dorper_fullblood_jantan.jpg" alt="Purebred Dorper sheep"><h3>Breed Standard</h3><p>Use breed standards, performance data and animal records together when selecting breeding stock.</p><span class="badge">Selection Guide</span></article></div>
+
+<div class="panel tabs">
+  <h3>Background on the Dorper</h3>
+  <div class="tab-list">
+    <button class="tab-btn active" data-tab="history">History & Origin</button>
+    <button class="tab-btn" data-tab="traits">Physical Traits</button>
+    <button class="tab-btn" data-tab="adapt">Hardiness & Adaptation</button>
+    <button class="tab-btn" data-tab="kenya">Why Kenya Farms Them</button>
+  </div>
+
+  <div class="tab-panel active" data-panel="history">
+    <div class="tab-grid">
+      <div>
+        <h4>Born from two breeds, built for the Karoo</h4>
+        <p>The Dorper was developed in South Africa in the 1930s by the Department of Agriculture, which crossed Dorset Horn rams with Blackhead Persian ewes. The goal was a fast-growing meat sheep that could thrive in the country's dry, semi-arid regions. The name itself is a blend of "Dorset" and "Persian."</p>
+        <p>The Dorper Sheep Breeders' Society of South Africa was founded in 1950, and the breed has since become the second most common sheep breed in South Africa. It has since spread to Australia, the United States, and across Africa, including Kenya, where it is prized for meat production.</p>
+      </div>
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Jr._Show_Champion_Dorper_Ewe_(45227768391).jpg" alt="Dorper ewe showing breed characteristics">
+    </div>
+  </div>
+
+  <div class="tab-panel" data-panel="traits">
+    <div class="tab-grid">
+      <div>
+        <h4>What sets a Dorper apart</h4>
+        <ul>
+          <li>Distinctive black head with a white (or fully white, for White Dorper) body.</li>
+          <li>A short, light coat of wool and hair that is naturally shed each spring and summer — no shearing required.</li>
+          <li>Compact, muscular build suited to efficient meat production.</li>
+          <li>Non-seasonal breeders capable of lambing more than once every two years under good management.</li>
+          <li>Naturally short, fat tail rather than a long wool tail.</li>
+        </ul>
+      </div>
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Reserve_Champion_Dorper_Ewe_(44234010785).jpg" alt="Dorper ewe close-up showing coat and build">
+    </div>
+  </div>
+
+  <div class="tab-panel" data-panel="adapt">
+    <div class="tab-grid">
+      <div>
+        <h4>Built to handle harsh, variable climates</h4>
+        <p>Dorpers were purpose-bred for South Africa's arid and semi-arid Karoo region, and they carry that hardiness with them wherever they're farmed. They forage efficiently on natural veld, cope well with heat, and are generally less labour-intensive than wool breeds since they shed their coats naturally.</p>
+        <p>That said, resilience still depends on good management — clean water, adequate nutrition, parasite control and routine health checks remain essential in any climate.</p>
+      </div>
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Ovce_a_jehne_dorper.jpg" alt="Dorper ewe and lamb grazing">
+    </div>
+  </div>
+
+  <div class="tab-panel" data-panel="kenya">
+    <div class="tab-grid">
+      <div>
+        <h4>A strong fit for Kenyan production systems</h4>
+        <p>Kenyan farmers increasingly favour Dorpers for their fast growth, good carcass quality and tolerance of arid and semi-arid lands (ASAL) similar in character to the Karoo. Combined with non-seasonal breeding and low wool-maintenance needs, the breed fits well into commercial and smallholder meat-production systems across the country.</p>
+        <p>DorperPro's Genetics Repository and Breeding Objective Wizard are built specifically to help Kenyan farmers apply these traits to local breeding decisions.</p>
+      </div>
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Domba_dorper_fullblood_jantan.jpg" alt="Purebred Dorper ram">
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="meat" class="page-section">
+<div class="page-heading"><div><p class="eyebrow">MEAT PRODUCTION</p><h2>Meat Quality & Lamb Aging</h2><p>Understand market readiness, carcass value and safe aging principles behind Dorper lamb, prized for its mild flavour and fine grain.</p></div></div>
+<div class="feature-grid"><article class="feature-card"><span>🥩</span><h3>Market Readiness</h3><p>Use live weight, condition and buyer requirements when deciding when to market lambs.</p></article><article class="feature-card"><span>🧊</span><h3>Wet Aging</h3><p>Vacuum-packed meat can be aged under controlled refrigerated conditions according to food-safety protocols.</p></article><article class="feature-card"><span>🌬️</span><h3>Dry Aging</h3><p>Requires controlled temperature, humidity and hygiene. It is best handled by trained professionals.</p></article></div>
+
+<div class="panel tabs">
+  <h3>Meat & Aging Reference</h3>
+  <div class="tab-list">
+    <button class="tab-btn active" data-tab="quality">Why Dorper Meat</button>
+    <button class="tab-btn" data-tab="ready">Judging Readiness</button>
+    <button class="tab-btn" data-tab="wet">Wet Aging</button>
+    <button class="tab-btn" data-tab="dry">Dry Aging</button>
+  </div>
+
+  <div class="tab-panel active" data-panel="quality">
+    <h4>A meat breed by design</h4>
+    <p>Dorper sheep were bred specifically for meat, not wool, so carcasses tend to carry good muscling with an even fat cover. The breed's fast growth rate means lambs commonly reach market weight sooner than many wool-focused breeds, and their non-seasonal breeding pattern lets farmers plan production across the year rather than around a single lambing season.</p>
+  </div>
+
+  <div class="tab-panel" data-panel="ready">
+    <h4>Signs a lamb is ready for market</h4>
+    <ul>
+      <li>Live weight has reached or exceeds the target set for the animal (see the Growth Analytics tab).</li>
+      <li>Body condition score reflects adequate fat cover without excess.</li>
+      <li>Buyer or market specifications (age, weight range, breed) are met.</li>
+      <li>The animal is healthy, with no pending withdrawal periods from recent medication.</li>
+    </ul>
+  </div>
+
+  <div class="tab-panel" data-panel="wet">
+    <h4>Wet aging (vacuum-packed, refrigerated)</h4>
+    <p>Wet aging involves vacuum-sealing cuts and holding them under controlled refrigeration, typically for several days to a couple of weeks. It is the more common commercial method: it minimises moisture loss and is easier to manage safely than dry aging. Always follow local food-safety regulations and maintain consistent, monitored cold-chain temperatures.</p>
+  </div>
+
+  <div class="tab-panel" data-panel="dry">
+    <h4>Dry aging (open-air, controlled environment)</h4>
+    <p>Dry aging exposes meat to controlled temperature, humidity and airflow to concentrate flavour, typically over one to several weeks. It requires precise environmental control and strict hygiene to prevent spoilage, and is best carried out by trained professionals or specialist facilities rather than informally on-farm.</p>
+  </div>
+</div>
+</section>
+
+<section id="finance" class="page-section">
+<div class="page-heading"><div><p class="eyebrow">FARM BUSINESS</p><h2>Farm Finance</h2><p>Track operating costs, revenue and estimated profitability.</p></div></div>
+<div class="two-column"><div class="panel"><h3>Log Transaction</h3><form id="financeForm" class="form-grid"><label>Type<select id="financeType"><option>Expense</option><option>Revenue</option></select></label><label>Category<input id="financeCategory" required placeholder="Feed, vet, sale..."></label><label>Amount (KES)<input id="financeAmount" type="number" min="0" required></label><label>Date<input id="financeDate" type="date" required></label><label class="full">Description<textarea id="financeNotes"></textarea></label><button class="primary-btn full">Save Transaction</button></form></div><div class="panel"><h3>Financial Summary</h3><div id="financeSummary" class="analytics-cards"></div></div></div>
+<div class="panel"><h3>Transaction History</h3><div class="table-wrap"><table><thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Description</th></tr></thead><tbody id="financeTableBody"></tbody></table></div></div>
+</section>
+
+<section id="market" class="page-section">
+<div class="page-heading"><div><p class="eyebrow">COMMERCIAL SALES</p><h2>Market & Sales</h2><p>Estimate carcass value and record sheep sales.</p></div></div>
+<div class="two-column"><div class="panel"><h3>Carcass Value Calculator</h3><form id="marketCalcForm" class="form-grid"><label>Live Weight (kg)<input id="marketWeight" type="number" min="0" step=".1" required></label><label>Dressing %<input id="dressingPct" type="number" min="1" max="100" value="45" required></label><label>Price per Carcass kg (KES)<input id="carcassPrice" type="number" min="0" value="900" required></label><button class="primary-btn full">Estimate Value</button></form><div id="marketCalcResult" class="result-card"></div></div>
+<div class="panel"><h3>Record a Sale</h3><form id="saleForm" class="form-grid"><label>Sheep<select id="saleAnimal"></select></label><label>Sale Date<input id="saleDate" type="date" required></label><label>Live Weight (kg)<input id="saleWeight" type="number" min="0" step=".1" required></label><label>Sale Price (KES)<input id="salePrice" type="number" min="0" required></label><label>Buyer / Market<input id="saleBuyer"></label><button class="primary-btn full">Record Sale</button></form></div></div>
+<div class="panel"><h3>Sales History</h3><div class="table-wrap"><table><thead><tr><th>Date</th><th>Sheep</th><th>Weight</th><th>Price</th><th>Buyer / Market</th></tr></thead><tbody id="salesTableBody"></tbody></table></div></div>
+</section>
+
+<section id="knowledge" class="page-section"><div class="page-heading"><div><p class="eyebrow">LEARNING</p><h2>Knowledge Hub</h2><p>Practical education for Dorper farmers.</p></div></div><div class="feature-grid"><article class="feature-card"><span>🧬</span><h3>Breeding & Genetics</h3><p>Set breeding objectives and keep accurate pedigree and performance records.</p></article><article class="feature-card"><span>🌿</span><h3>Nutrition</h3><p>Learn about forage, supplements, minerals and water management.</p></article><article class="feature-card"><span>💉</span><h3>Health</h3><p>Build preventive health routines and consult qualified professionals when needed.</p></article></div></section>
+
+<section id="community" class="page-section"><div class="page-heading"><div><p class="eyebrow">COMMUNITY</p><h2>Farmer Questions</h2><p>Share practical questions on breeding, genetics, nutrition and health.</p></div></div><div class="two-column"><div class="panel"><h3>Ask the Community</h3><form id="questionForm" class="form-grid"><label>Category<select id="questionCategory"><option>Breeding</option><option>Genetics</option><option>Nutrition</option><option>Health</option><option>Lambing</option></select></label><label>Question Title<input id="questionTitle" required></label><label class="full">Details<textarea id="questionBody" required></textarea></label><button class="primary-btn full">Post Question</button></form></div><div class="panel"><h3>Community Feed</h3><div id="questionsList"></div></div></div></section>
+</main>
+</div>
+
+<div id="animalModal" class="modal"><div class="modal-card"><button class="close-modal">×</button><h2 id="animalModalTitle">Add Sheep</h2><form id="animalForm" class="form-grid">
+<input id="animalId" type="hidden"><label>Tag Number<input id="tag" required></label><label>Name<input id="animalName"></label><label>Sex<select id="animalSex"><option>Ram</option><option>Ewe</option><option>Lamb</option></select></label><label>Breed<select id="animalBreed"><option>Dorper</option><option>White Dorper</option><option>Dorper Cross</option></select></label><label>Date of Birth<input id="dob" type="date" required></label><label>Current Weight (kg)<input id="weight" type="number" min="0" step=".1" required></label><label>Target Market Weight (kg)<input id="targetWeight" type="number" min="0" step=".1" value="45" required></label><label>Birth Type<select id="birthType"><option>Single</option><option>Twin</option><option>Triplet</option></select></label><label>Sire Tag<input id="sire"></label><label>Dam Tag<input id="dam"></label><label>Status<select id="animalStatus"><option>Growing</option><option>Breeding</option><option>Pregnant</option><option>Ready for Market</option><option>Sold</option></select></label><label>Photo URL<input id="photo" placeholder="Optional licensed image URL"></label><label>Growth Score (0-100)<input id="growthScore" type="number" min="0" max="100" value="70"></label><label>Fertility Score (0-100)<input id="fertilityScore" type="number" min="0" max="100" value="70"></label><label>Mothering Score (0-100)<input id="motheringScore" type="number" min="0" max="100" value="70"></label><label>Resilience Score (0-100)<input id="resilienceScore" type="number" min="0" max="100" value="70"></label><label class="full">Background / Notes<textarea id="animalNotes"></textarea></label><button class="primary-btn full">Save Sheep</button></form></div></div>
+<div id="toast" class="toast"></div>
+<script src="js/script.js"></script>
+</body>
+</html>
